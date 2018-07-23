@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnZero,btnOne,btnTwo,btnThree,btnFour,btnFive,btnSix,btnSeven,btnEight,btnNine,btnAdd,btnSub,btnMul,btnDiv,btnEqual,btnClear;
@@ -143,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
         btnMul.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!etOperation.getText().toString().contains("*")) {
+                if (!etOperation.getText().toString().contains("*"))
+                {
                     etOperation.setText(etOperation.getText() + "*");
                 }
             }
@@ -153,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
         btnDiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!etOperation.getText().toString().contains("/")) {
+                if (!etOperation.getText().toString().contains("/"))
+                {
                     etOperation.setText(etOperation.getText() + "/");
                 }
             }
@@ -162,8 +167,26 @@ public class MainActivity extends AppCompatActivity {
         btnEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //etOperation.setText(etOperation.getText()+"=");
 
+                // Read the expression
+                String txt = etOperation.getText().toString();
+
+                if(txt.endsWith("+") || txt.endsWith("-") || txt.endsWith("/") || txt.endsWith("*")){
+                    tvResult.setText("Error");
+                }
+                else{
+                    // Create an Expression (A class from exp4j library)
+                    Expression expression = new ExpressionBuilder(txt).build();
+                    try {
+                        // Calculate the result and display
+                        double result = expression.evaluate();
+                        tvResult.setText(Double.toString(result));
+                    } catch (ArithmeticException ex) {
+                        // Display an error message
+                        tvResult.setText("Error");
+
+                    }
+                }
 
             }
         });
@@ -177,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 tvResult.setText("");
             }
         });
+
     }
 }
+
 
